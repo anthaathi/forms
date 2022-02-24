@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Render Dynamic Forms</title>
+
+    <!-- There was some annoying error in console so just put some placeholder -->
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/99426700?s=54&v=4" />
+
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script>
+      window.process = {
+        env: 'development',
+      };
+    </script>
+
+    <style>
+      body,
+      html {
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+
+    <script src="./out/index.js"></script>
+  </body>
+</html>

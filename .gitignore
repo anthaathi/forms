@@ -1,0 +1,7 @@
+.idea
+node_modules
+.swc
+demo/*.js
+src/packages/*.js
+src/packages/*/out
+dist-demo

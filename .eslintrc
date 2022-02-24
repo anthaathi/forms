@@ -1,0 +1,20 @@
+{
+  "extends": ["airbnb", "airbnb/hooks"],
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "baseui",
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "import/extensions": "off",
+    "import/no-unresolved": "off",
+    "react/jsx-filename-extension": "off",
+    "baseui/deprecated-theme-api": "warn",
+    "baseui/deprecated-component-api": "warn",
+    "baseui/no-deep-imports": "warn"
+  },
+  "env": {
+    "browser": true
+  }
+}
