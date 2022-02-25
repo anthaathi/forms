@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Interface generator should render imports 1`] = `
+"/* eslint-disable */
+import * as React from \\"react\\";
+import { Input } from \\"baseui/input\\";
+import { Grid, Cell } from \\"baseui/layout-grid\\";
+export type Input$Props = React.ComponentProps<typeof Input>;
+export { Input };
+export type Grid$Props = React.ComponentProps<typeof Grid>;
+export { Grid };
+export type Cell$Props = React.ComponentProps<typeof Cell>;
+export { Cell };
+export default [
+ { type: \\"Input\\", component: Input  } , { type: \\"Grid\\", component: Grid  } , { type: \\"Cell\\", component: Cell  } 
+]"
+`;

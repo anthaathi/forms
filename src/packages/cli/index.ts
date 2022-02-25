@@ -1,7 +1,6 @@
-console.log('test');
+import { interfaceGenerator } from '@anthaathi/core';
+import fs from 'fs';
 
-function jsx() {
-  console.log('test');
-}
+const d = interfaceGenerator({});
 
-jsx();
+console.log(d);

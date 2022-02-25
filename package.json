@@ -61,7 +61,7 @@
   "scripts": {
     "compile": "rollup -c rollup.config.ts",
     "demo": "rollup -w -c rollup-demo.config.ts",
-    "run:cli": "cross-env PROJECT_ID=cli rollup -c rollup.config.ts",
+    "run:cli": "cross-env PROJECT_ID=cli rollup -c rollup.config.ts && node src/packages/cli/out/dist/index.js",
     "test": "jest"
   },
   "prettier": {
