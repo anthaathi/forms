@@ -1,13 +1,7 @@
 import RenderComponent from './Components/RenderComponent';
-import {
-  ComponentRegistryProps,
-  ComponentRegistry,
-  useComponentRegistry,
-} from './Context/ComponentRegistry';
+import { useComponentRegistry } from './Context/ComponentRegistry';
+import ComponentRegistryProvider from './Components/ComponentRegistryProvider';
 
-export {
-  RenderComponent,
-  ComponentRegistryProps,
-  ComponentRegistry,
-  useComponentRegistry,
-};
+export type { ComponentRegistryProps } from './Context/ComponentRegistry';
+
+export { RenderComponent, useComponentRegistry, ComponentRegistryProvider };

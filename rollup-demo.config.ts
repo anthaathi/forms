@@ -5,21 +5,23 @@ import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 // @ts-ignore
 import serve from 'rollup-plugin-serve';
+import del from 'rollup-plugin-delete';
 
 export default {
   input: 'src/packages/demo/index.tsx',
   output: [
     {
-      file: 'src/packages/demo/out/index.js',
-      format: 'cjs',
+      dir: 'src/packages/demo/out',
+      format: 'es',
       sourcemap: true,
       exports: 'auto',
     },
   ],
   plugins: [
+    del({ targets: 'src/packages/demo/out/*' }),
     swc({
       minify: true,
-      sourceMaps: 'inline',
+      sourceMaps: true,
     }),
 
     nodeResolve({

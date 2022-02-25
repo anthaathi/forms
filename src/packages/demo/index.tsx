@@ -1,17 +1,16 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import * as React from 'react';
+import { lazy, StrictMode, Suspense } from 'react';
 import * as ReactDOM from 'react-dom';
 import { BaseProvider, LightTheme } from 'baseui';
 import { Provider as StyletronProvider } from 'styletron-react';
 import { Client as Styletron } from 'styletron-engine-atomic';
 import { Button } from 'baseui/button';
 import { Input } from 'baseui/input';
-import { Block } from 'baseui/block';
 
 import { Cell, Grid } from 'baseui/layout-grid';
-import { StrictMode } from 'react';
 import {
-  ComponentRegistry,
+  ComponentRegistryProvider,
   ComponentRegistryProps,
   RenderComponent,
 } from '../render';
@@ -22,52 +21,42 @@ const engine = new Styletron({
 });
 
 const componentRegistry: ComponentRegistryProps[] = [
-  { type: 'button', component: Button, dynamicProps: ['children'] },
-  { type: 'input', component: Input },
-  { type: 'block', component: Block, dynamicProps: ['children'] },
+  { type: 'Button', component: Button, dynamicProps: ['children'] },
+  { type: 'Input', component: Input },
+  {
+    type: 'Block',
+    component: lazy(() =>
+      import('baseui/block').then((d) => ({ default: d.Block })),
+    ),
+    dynamicProps: ['children'],
+  },
   // @ts-ignore
-  { type: 'grid', component: Grid, dynamicProps: ['children'] },
-  { type: 'cell', component: Cell, dynamicProps: ['children'] },
+  { type: 'Grid', component: Grid, dynamicProps: ['children'] },
+  { type: 'Cell', component: Cell, dynamicProps: ['children'] },
 ];
 
-const component: RenderComponentsProps = {
-  __component: 'block',
-  children: [
-    {
-      __component: 'grid',
-      maxWidth: 0,
-      margin: 0,
-
-      children: [
-        {
-          __component: 'cell',
-          span: 6,
-          children: {
-            __component: 'input',
-            placeholder: 'Search',
-          },
-        },
-        {
-          __component: 'cell',
-          span: 6,
-          children: {
-            __component: 'button',
-            children: 'JSX',
-          },
-        },
-      ],
-    },
-  ],
+const component: RenderComponentsProps<any> = {
+  schema: {
+    $$kind: 'span',
+    children: [
+      { $$kind: 'span', children: <div>Hello world</div> },
+      { $$kind: 'span', children: <div>Hello world</div> },
+      { $$kind: 'span', children: null },
+    ],
+  },
+  version: 'alpha0',
 };
 
 function App() {
   return (
     <StyletronProvider value={engine}>
       <BaseProvider theme={LightTheme}>
-        <ComponentRegistry.Provider value={componentRegistry}>
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-          <RenderComponent {...component} />
-        </ComponentRegistry.Provider>
+        <ComponentRegistryProvider elements={componentRegistry}>
+          <Suspense fallback={<p>Loading</p>}>
+            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+            <RenderComponent {...component} />
+          </Suspense>
+        </ComponentRegistryProvider>
       </BaseProvider>
     </StyletronProvider>
   );

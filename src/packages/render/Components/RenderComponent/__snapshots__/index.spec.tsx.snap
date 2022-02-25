@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RenderComponent should render components 1`] = `
+<div>
+  <div
+    data-id="item-rendered1"
+  >
+    <div
+      data-id="item-rendered2"
+    >
+      <div>
+        Hello world
+      </div>
+    </div>
+    <div
+      data-id="item-rendered3"
+    />
+  </div>
+</div>
+`;
+
+exports[`RenderComponent should render tree with passed components 1`] = `
+<div>
+  <div
+    class=""
+  >
+    <div>
+      <div
+        class="_ae"
+        data-baseweb="block"
+      >
+        <span>
+          test
+        </span>
+        <span>
+          test2
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class=""
+  />
+</div>
+`;

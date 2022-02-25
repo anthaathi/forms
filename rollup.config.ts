@@ -3,41 +3,48 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import external from 'rollup-plugin-node-externals';
 import * as path from 'path';
-import typescript from 'rollup-plugin-typescript2';
 // @ts-ignore
 import generatePackageJson from 'rollup-plugin-generate-package-json';
+import swc from 'rollup-plugin-swc';
+
 // @ts-ignore
 import pkg from './package.json';
 
-export default ['render'].map((res) => ({
-  input: `./src/packages/${res}`,
+const { PROJECT_ID } = process.env;
+
+const projectHasTsFile = ['cli', 'core'];
+
+export default ['render', 'cli', 'core'].filter((res) => PROJECT_ID === res || !PROJECT_ID).map((res) => ({
+  input: path.join(__dirname, `./src/packages/${projectHasTsFile.indexOf(res) !== -1 ? `${res}/index.ts` : `${res}/index.tsx`}`),
   output: [
     {
       file: path.join('src/packages', res, 'out', pkg.main),
       format: 'cjs',
-      sourcemap: true,
       exports: 'auto',
+      sourcemap: true,
     },
     {
       file: path.join('src/packages', res, 'out', pkg.module),
       format: 'es',
-      sourcemap: true,
       exports: 'auto',
+      sourcemap: true,
     },
     {
       file: path.join('src/packages', res, 'out', 'dist/index.js'),
       format: 'cjs',
-      sourcemap: true,
       exports: 'auto',
+      sourcemap: true,
     },
   ],
   plugins: [
-    typescript({
-      rollupCommonJSResolveHack: true,
-      exclude: ['**/__tests__/**', '*.spec.*', '*.test.*'],
-      clean: true,
-      tsconfigDefaults: {
-        rootDir: path.join('src/packages', res),
+    swc({
+      minify: true,
+      sourceMaps: true,
+      jsc: {
+        parser: {
+          syntax: 'typescript',
+          tsx: true,
+        },
       },
     }),
 

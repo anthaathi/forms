@@ -1,41 +1,50 @@
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useComponentRegistry } from '../../Context/ComponentRegistry';
+import startWithCapital from './utils/start-with-capital';
 
-export interface RenderComponentsProps {
-  __component: string;
-  // We don't use any except for this place
-  [props: string]: any;
+export interface RenderComponentsProps<T> {
+  schema: {
+    $$kind: string;
+    children?: React.ReactNode;
+  } & T;
+
+  version: string;
 }
 
 /**
  * Render dynamic components just like json schema
  * @constructor
  */
-export default function RenderComponent({
-  __component,
-  ...props
-}: RenderComponentsProps) {
+export default function RenderComponent<T = any>({
+  schema: { $$kind, ...props },
+  version,
+}: RenderComponentsProps<T>) {
   const componentRegistry = useComponentRegistry();
 
   const component = useMemo(
-    () => componentRegistry.find((res) => res.type === __component),
-    [__component, componentRegistry],
+    () => componentRegistry.find((res) => res.type === $$kind),
+    [$$kind, componentRegistry],
   );
 
   const propsToPass = useMemo(() => {
-    if (!component) {
-      return null;
-    }
-
     const newProps = {
       ...props,
-    };
+    } as T & any;
 
     function convertApp(value: any, index: number) {
-      if (typeof value === 'object') {
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        return <RenderComponent key={value.id || index} {...value} />;
+      if (React.isValidElement(value)) {
+        return value;
+      }
+
+      if (value && typeof value === 'object' && '$$kind' in value) {
+        return (
+          <RenderComponent
+            key={value.id || index}
+            version={version}
+            schema={value}
+          />
+        );
       }
 
       if (!value) {
@@ -45,27 +54,45 @@ export default function RenderComponent({
       return value;
     }
 
-    Object.keys(newProps)
-      .filter((key) => component?.dynamicProps?.indexOf(key) !== -1)
-      .forEach((res) => {
-        const value = newProps[res];
+    Object.keys(newProps).forEach((res) => {
+      if (res.startsWith('$$')) {
+        delete newProps[res];
+        return;
+      }
 
-        if (Array.isArray(value)) {
-          newProps[res] = value.map(convertApp);
-        } else {
-          newProps[res] = convertApp(value, 0);
-        }
-      });
+      const value = newProps[res];
+
+      if (Array.isArray(value)) {
+        newProps[res] = value.map(convertApp);
+      } else {
+        newProps[res] = convertApp(value, 0);
+      }
+    });
 
     return newProps;
-  }, [component, props]);
+  }, [props, version]);
 
-  if (!component) {
+  const shouldRender = useMemo(
+    () => component?.component || !startWithCapital($$kind),
+    [$$kind, component?.component],
+  );
+
+  if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      if (!shouldRender) {
+        // eslint-disable-next-line no-console
+        console.warn(`${$$kind} is not registered`);
+      }
+    }, [$$kind, shouldRender]);
+  }
+
+  if (!shouldRender) {
     return null;
   }
 
   return React.createElement(
-    component.component,
+    component?.component || $$kind,
     propsToPass,
     propsToPass?.children || null,
   );

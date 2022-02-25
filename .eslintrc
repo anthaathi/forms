@@ -1,11 +1,8 @@
 {
-  "extends": ["airbnb", "airbnb/hooks"],
+  "extends": ["airbnb", "airbnb/hooks", "prettier"],
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "baseui",
-    "@typescript-eslint"
-  ],
+  "plugins": ["baseui", "@typescript-eslint"],
   "rules": {
     "import/extensions": "off",
     "import/no-unresolved": "off",
@@ -15,6 +12,7 @@
     "baseui/no-deep-imports": "warn"
   },
   "env": {
-    "browser": true
+    "browser": true,
+    "jest": true
   }
 }
